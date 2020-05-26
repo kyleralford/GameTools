@@ -4,13 +4,14 @@ using UnityEngine;
 
 public class ButtonInputUIDriver : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public ButtonInput buttonInput;
+    private Button buttonUI;
+
+    private void Awake()
     {
-        
+        buttonUI = GetComponent<Button>();
     }
 
-    // Update is called once per frame
     void Update()
     {
         
