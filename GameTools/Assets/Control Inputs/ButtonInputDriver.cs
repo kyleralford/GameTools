@@ -1,36 +1,73 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class ButtonInputDriver : MonoBehaviour
 {
     public ButtonInput buttonInput;
+    private Button buttonUI;
     private float buttonPressLength = 0.0f;
     private bool buttonTimerTriggered = false;
+    private bool isUIButtonPressed = false;
+    private bool lastFramePressed = false;
+
+    private void Awake()
+    {
+        if (GetComponent<Button>() != null)
+        {
+            buttonUI = GetComponent<Button>();
+        }
+
+        // Throw debugs in case of missing dependencies
+        if (buttonInput == null)
+        {
+            Debug.Log(name + " is missing a reference to a buttonInput.");
+        }
+        if (buttonInput.keystroke == null && buttonInput.keystrokeAlt == null && buttonUI == null)
+        {
+            Debug.Log("Button Input " + buttonInput.name + " has not been set up properly. This buttonInput needs to have keystrokes assigned, or must be attached to a UI Button.");
+        }
+        else if (buttonUI != null && GetComponent<EventTrigger>() == null)
+        {
+            Debug.Log(name + " is attempting to drive a buttonInput with a UI button but needs an event trigger pointing to the PointerDown and PointerUp methods.");
+        }
+    }
 
     void Update()
     {
-        // Setting the "ButtonDown" bool
-        buttonInput.onButtonDown = Input.GetKeyDown(buttonInput.keystroke);
-        if (buttonInput.onButtonDown == false && buttonInput.keystrokeAlt != null)
+        // Reset the onDown and onUp and onTimer triggers
+        buttonInput.isButtonPressed = false;
+        buttonInput.onButtonDown = false;
+        buttonInput.onButtonUp = false;
+        buttonInput.onButtonTimer = false;
+
+        // Get all the isButtonPressedInputs
+        if (Input.GetKey(buttonInput.keystroke) == true)
         {
-            buttonInput.onButtonDown = Input.GetKeyDown(buttonInput.keystrokeAlt);
+            buttonInput.isButtonPressed = true;
         }
-        if (buttonInput.onButtonDown)
+        if (buttonInput.isButtonPressed == false && Input.GetKey(buttonInput.keystrokeAlt) == true)
+        {
+            buttonInput.isButtonPressed = true;
+        }
+        if (buttonInput.isButtonPressed == false && isUIButtonPressed == true)
         {
             buttonInput.isButtonPressed = true;
         }
 
-        // Setting the "ButtonUp" bool
-        buttonInput.onButtonUp = Input.GetKeyUp(buttonInput.keystroke);
-        if (buttonInput.onButtonUp == false && buttonInput.keystrokeAlt != null)
+        // Cases for onButtonDown and onButtonUp
+        if (buttonInput.isButtonPressed == true && lastFramePressed == false)
         {
-            buttonInput.onButtonUp = Input.GetKeyUp(buttonInput.keystrokeAlt);
+            buttonInput.onButtonDown = true;
         }
-        if (buttonInput.onButtonUp)
+        else if (buttonInput.isButtonPressed == false && lastFramePressed == true)
         {
-            buttonInput.isButtonPressed = false;
+            buttonInput.onButtonUp = true;
         }
+        // Set lastFramePressed for the next frame
+        lastFramePressed = buttonInput.isButtonPressed;
 
         // Setting the "OnButtonTimer" bool
         if (buttonInput.onButtonDown)
@@ -54,6 +91,16 @@ public class ButtonInputDriver : MonoBehaviour
                 buttonTimerTriggered = true;
             }
         }
-
     }
+
+    public void PointerDown()
+    {
+        isUIButtonPressed = true;
+    }
+
+    public void PointerUp()
+    {
+        isUIButtonPressed = false;
+    }
+
 }
