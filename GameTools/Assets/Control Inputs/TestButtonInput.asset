@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: TestButtonInput
   m_EditorClassIdentifier: 
   keystroke: a
-  keystrokeAlt: f
+  keystrokeAlt: left
   secondaryTimer: 0.15
   isButtonPressed: 0
   onButtonDown: 0
