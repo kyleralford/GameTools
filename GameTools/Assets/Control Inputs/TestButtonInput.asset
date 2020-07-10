@@ -15,7 +15,11 @@ MonoBehaviour:
   keystroke: a
   keystrokeAlt: left
   secondaryTimer: 0.15
+  doesTimerSkipUp: 1
   isButtonPressed: 0
+  virtualPress: 0
+  virtualTimer: 0
+  virtualButtonHold: 0
   onButtonDown: 0
   onButtonTimer: 0
   onButtonUp: 0

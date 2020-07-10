@@ -4,14 +4,24 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
+/*
+ *  If trying to press the button via script, use the VirtualPress() method for a single frame press
+ *  Use VirtualHoldStart() and VirtualHoldStop() for a virtual hold
+ *  Use VirtualTimer(float) to hold for a specific amount of time (in frames)
+ *      - a value of 0.0f will default to pressing the button until the secondary timer triggers
+ */
+
 public class ButtonInputDriver : MonoBehaviour
 {
     public ButtonInput buttonInput;
+	[TextArea (0, 10)]
+	public string Notes = "Description of button usage.";
     private Button buttonUI;
     private float buttonPressLength = 0.0f;
     private bool buttonTimerTriggered = false;
     private bool isUIButtonPressed = false;
     private bool lastFramePressed = false;
+    private bool isSkippingUp = false;
 
     private void Awake()
     {
@@ -37,47 +47,64 @@ public class ButtonInputDriver : MonoBehaviour
 
     void Update()
     {
-        // Reset the onDown and onUp and onTimer triggers
+// Reset the onDown and onUp and onTimer triggers
         buttonInput.isButtonPressed = false;
         buttonInput.onButtonDown = false;
         buttonInput.onButtonUp = false;
         buttonInput.onButtonTimer = false;
 
-        // Get all the isButtonPressedInputs
+// Get all the isButtonPressedInputs
         if (Input.GetKey(buttonInput.keystroke) == true)
         {
             buttonInput.isButtonPressed = true;
         }
-        if (buttonInput.isButtonPressed == false && Input.GetKey(buttonInput.keystrokeAlt) == true)
+        else if (buttonInput.isButtonPressed == false && Input.GetKey(buttonInput.keystrokeAlt) == true)
         {
             buttonInput.isButtonPressed = true;
         }
-        if (buttonInput.isButtonPressed == false && isUIButtonPressed == true)
+        else if (buttonInput.isButtonPressed == false && isUIButtonPressed == true)
         {
             buttonInput.isButtonPressed = true;
+        }
+        else if (buttonInput.virtualPress == true)
+        {
+            buttonInput.isButtonPressed = true;
+            buttonInput.virtualPress = false;
+        }
+        else if (buttonInput.virtualButtonHold == true)
+        {
+            buttonInput.isButtonPressed = true;
+        }
+        
+        if (buttonInput.virtualTimer > 0.0f) // The virtualTimer condition has no 'else' because it needs to have time subtracted even if the button has already registered as pressed.
+        {
+            buttonInput.isButtonPressed = true;
+            buttonInput.virtualTimer -= Time.deltaTime;
+            if (buttonInput.virtualTimer < 0.0f)
+            {
+                buttonInput.virtualTimer = 0.0f;
+            }
         }
 
-        // Cases for onButtonDown and onButtonUp
+// Cases for onButtonDown and onButtonUp
         if (buttonInput.isButtonPressed == true && lastFramePressed == false)
         {
             buttonInput.onButtonDown = true;
+            buttonPressLength = 0.0f;
+            isSkippingUp = false;
         }
         else if (buttonInput.isButtonPressed == false && lastFramePressed == true)
         {
-            buttonInput.onButtonUp = true;
+            buttonTimerTriggered = false;
+            if (!isSkippingUp)
+            {
+                buttonInput.onButtonUp = true;
+            }
         }
-        // Set lastFramePressed for the next frame
+// Set lastFramePressed for the next frame
         lastFramePressed = buttonInput.isButtonPressed;
 
-        // Setting the "OnButtonTimer" bool
-        if (buttonInput.onButtonDown)
-        {
-            buttonPressLength = 0.0f;
-        }
-        if (buttonInput.onButtonUp)
-        {
-            buttonTimerTriggered = false;
-        }
+// Setting the "OnButtonTimer" bool
         if (buttonInput.onButtonTimer)
         {
             buttonInput.onButtonTimer = false;
@@ -89,6 +116,10 @@ public class ButtonInputDriver : MonoBehaviour
             {
                 buttonInput.onButtonTimer = true;
                 buttonTimerTriggered = true;
+                if (buttonInput.doesTimerSkipUp == true)
+                {
+                    isSkippingUp = true;
+                }
             }
         }
     }
