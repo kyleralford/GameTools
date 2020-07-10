@@ -671,6 +671,8 @@ GameObject:
   - component: {fileID: 2124005611}
   - component: {fileID: 2124005610}
   - component: {fileID: 2124005609}
+  - component: {fileID: 2124005613}
+  - component: {fileID: 2124005608}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -678,6 +680,19 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &2124005608
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2124005607}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e92763e2766b4b4eaa4f2fdcb6c29de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buttonInput: {fileID: 11400000, guid: 5e5f01c21c2304cb5bb0a2e075250ba2, type: 2}
 --- !u!65 &2124005609
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -750,3 +765,17 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2124005613
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2124005607}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91bc5b084e4054f4aa4973b4c0fa2e46, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buttonInput: {fileID: 11400000, guid: 5e5f01c21c2304cb5bb0a2e075250ba2, type: 2}
+  Notes: Description of button usage.

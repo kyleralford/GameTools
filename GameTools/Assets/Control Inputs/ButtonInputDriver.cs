@@ -35,7 +35,7 @@ public class ButtonInputDriver : MonoBehaviour
         {
             Debug.Log(name + " is missing a reference to a buttonInput.");
         }
-        if (buttonInput.keystroke == null && buttonInput.keystrokeAlt == null && buttonUI == null)
+        if (buttonInput.keystroke == "" && buttonInput.keystrokeAlt == "" && buttonUI == null)
         {
             Debug.Log("Button Input " + buttonInput.name + " has not been set up properly. This buttonInput needs to have keystrokes assigned, or must be attached to a UI Button.");
         }
@@ -54,15 +54,21 @@ public class ButtonInputDriver : MonoBehaviour
         buttonInput.onButtonTimer = false;
 
 // Get all the isButtonPressedInputs
-        if (Input.GetKey(buttonInput.keystroke) == true)
+        if (buttonInput.keystroke != "")
         {
-            buttonInput.isButtonPressed = true;
+            if (Input.GetKey(buttonInput.keystroke) == true)
+            {
+                buttonInput.isButtonPressed = true;
+            }
         }
-        else if (buttonInput.isButtonPressed == false && Input.GetKey(buttonInput.keystrokeAlt) == true)
+        else if (buttonInput.keystrokeAlt != "")
         {
-            buttonInput.isButtonPressed = true;
+            if (Input.GetKey(buttonInput.keystrokeAlt) == true)
+            {
+                buttonInput.isButtonPressed = true;
+            }
         }
-        else if (buttonInput.isButtonPressed == false && isUIButtonPressed == true)
+        else if (isUIButtonPressed == true)
         {
             buttonInput.isButtonPressed = true;
         }
