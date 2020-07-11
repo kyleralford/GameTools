@@ -4,25 +4,19 @@ using UnityEngine;
 
 public class ProControllerTest : MonoBehaviour
 {
-    public ButtonInput buttonInput;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
     // Update is called once per frame
     void Update()
     {
-/*        if (Input.GetKeyDown("joystick button 0"))
+        if (Input.GetKeyDown("joystick button 0"))
         {
-            Debug.Log("That button was pressed.");
-        } */
-
-        if (buttonInput.onButtonDown)
-        {
-            Debug.Log("That button was pressed.");
+            Debug.Log("The 'B' button was pressed.");
         }
+
+        if (Input.GetKeyDown("joystick button 11"))
+        {
+            Debug.Log("The right stick was clicked.");
+        }
+
+        Debug.Log(Input.GetAxis("Horizontal"));
     }
 }
