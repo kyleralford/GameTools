@@ -2,10 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "RuntimeSet", menuName = "Runtime Set", order = 61)]
 public abstract class RuntimeSet<T> : ScriptableObject
 {
+    [HideInInspector]
     public List<T> Items = new List<T>();
+
+    public void Clear()
+    {
+        Items.Clear();
+    }
 
     public void Add(T t)
     {
